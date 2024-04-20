@@ -1,0 +1,223 @@
+<div class="container-fluid d-flex align-items-center justify-content-center">
+  <div class="container-page ele-ht">
+    <div class="col-12 row">
+      <div class="fullwidth pl-0">
+        <div class="head">
+          <div class="d-flex flex-column">
+            <h2 class="page-heading">Wallet For You</h2>
+            <p>Wallet to Add You Daily Transactions</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-6 col-12" style="align-items: center;display: grid;">
+        <div class="card">
+          <div class="card-body">
+            <p class="card-title">My E-wallet</p>
+
+            <div class="amount-box text-center">
+              <img
+                src="https://lh3.googleusercontent.com/ohLHGNvMvQjOcmRpL4rjS3YQlcpO0D_80jJpJ-QA7-fQln9p3n7BAnqu3mxQ6kI4Sw"
+                alt="wallet"
+              />
+              <ng-container *ngIf="commonService.isWalletSetup">
+                <p>Total Balance</p>
+                <p class="amount">₹ {{balance}}</p>
+              </ng-container>
+            </div>
+            <div class="d-flex align-items-center justify-content-center mt-4">
+              <div class="transaction" *ngIf="!commonService.isWalletSetup">
+                <div class="left">
+                  <span>Please Setup Your Wallet</span>
+                </div>
+                <div class="right">
+                  <div class="transaction-div">
+                    <button
+                      class="add-transaction-btn"
+                      pTooltip="Add Wallet"
+                      type="button"
+                      tooltipPosition="bottom"
+                      (click)="openModal(1)"
+                    >
+                      <img src="assets/add_transaction_icon.svg" />
+                      Add Wallet
+                    </button>
+                  </div>
+                </div>
+              </div>
+              <div class="transaction" *ngIf="commonService.isWalletSetup">
+                  <div class="transaction-div">
+                    <button
+                      class="add-transaction-btn"
+                      pTooltip="Add Transaction"
+                      type="button"
+                      tooltipPosition="bottom"
+                      (click)="openModal(2)"
+                    >
+                      <img src="assets/add_transaction_icon.svg" />
+                      Add Transaction
+                    </button>
+                  </div>
+              </div>
+              <div class="transaction" *ngIf="commonService.isWalletSetup">
+                <div class="transaction-div">
+                  <button
+                    class="add-transaction-btn"
+                    pTooltip="Transactions Logs"
+                    type="button"
+                    tooltipPosition="bottom"
+                    (click)="selectTab('logs')"
+                    routerLink="/transactions"
+                  >
+                  <img src="assets/logs.svg" style="width: 20px;height: 20px;"/>
+                  Transactions Logs
+                  </button>
+                </div>
+            </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6 col-12">
+        <div class="wallet-img">
+          <img style="width: 100%;"
+            src="assets/wallet.gif"
+          />
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal" *ngIf="walletPopup">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Wallet Setup</h1>
+        <button
+          type="button"
+          class="btn-close"
+          (click)="closePopup()"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <form [formGroup]="addWalletForm" (submit)="addWallet()">
+          <div class="col d-flex flex-column">
+            <div class="drop col-12 bg-light" style="margin: 10px 0 0 0">
+              <div class="dhead">
+                Name
+                <span style="color: #ff0000">*</span>
+              </div>
+              <input type="text" formControlName="name" />
+            </div>
+            <div
+              *ngIf="
+                walletSubmitted && addWalletForm.controls['name'].errors
+              "
+              class="error"
+            >
+              <span>This field is required</span>
+            </div>
+          </div>
+          <div class="col d-flex">
+            <div class="drop col-12 bg-light" style="margin: 10px 0 0 0">
+              <div class="dhead">Amount</div>
+              <input type="number" formControlName="balance" />
+            </div>
+          </div>
+          <div class="footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              (click)="closePopup()"
+            >
+              Close
+            </button>
+            <button type="submit" class="btn btn-primary">Create</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal" *ngIf="transactionPopup">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Add Transaction</h1>
+        <button
+          type="button"
+          class="btn-close"
+          (click)="closePopup()"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <form [formGroup]="addTransactionForm" (submit)="addTransactions()">
+          <div class="col flex-column">
+            <div class="drop col-12 bg-light" style="margin: 10px 0 0 0">
+              <div class="dhead">
+                Amount
+                <span style="color: #ff0000">*</span>
+              </div>
+              <input type="number" formControlName="amount" />
+            </div>
+          </div>
+          <div
+            *ngIf="
+              transactionsSubmitted &&
+              addTransactionForm.controls['amount'].errors
+            "
+            class="error"
+          >
+            <span>This field is required</span>
+          </div>
+          <div class="col">
+            <div class="drop col-12 bg-light" style="margin: 10px 0 0 0">
+              <div class="dhead">
+                Type <span style="color: #ff0000">*</span>
+              </div>
+              <select
+                class="dhead"
+                name="transaction_type"
+                id="transaction_type"
+                formControlName="transaction_type"
+              >
+                <option value="">Please select a type</option>
+                <option [ngValue]="0">Debit</option>
+                <option [ngValue]="1">Credit</option>
+              </select>
+            </div>
+            <div
+              *ngIf="
+                transactionsSubmitted &&
+                addTransactionForm.controls['transaction_type'].errors
+              "
+              class="error"
+            >
+              <span>This field is required</span>
+            </div>
+          </div>
+          <div class="col">
+            <div class="drop col-12 bg-light" style="margin: 10px 0 0 0">
+              <div class="dhead">Remarks</div>
+              <input type="text" formControlName="description" />
+            </div>
+          </div>
+          <div class="footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              (click)="closePopup()"
+            >
+              Close
+            </button>
+            <button type="submit" class="btn btn-primary">Create</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

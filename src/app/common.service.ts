@@ -18,6 +18,7 @@ export class CommonService {
   }
 
   public setupWallet(body:any){
+    body.balance = body.balance ? body.balance : 0
     return this.http.post(`${this.base_url}/setup`, body)
   }
 

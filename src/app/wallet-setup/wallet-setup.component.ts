@@ -38,7 +38,7 @@ export class WalletSetupComponent {
       this.commonService.getWallet(JSON.parse(walletId)).subscribe((data:any)=>{
         this.commonService.showLoader = false;
         if(data && data.data){
-          if(data.data.balance && data.data.id){
+          if(data.data.balance!= null && data.data.id){
             this.balance = data.data.balance;
             this.wallet_id = data.data.id;
           }
@@ -99,7 +99,7 @@ export class WalletSetupComponent {
     this.commonService.setupWallet(this.addWalletForm.value).subscribe((data:any)=>{
       this.commonService.showLoader = false;
       if(data && data.data){
-        if(data.data.balance && data.data.id){
+        if(data.data.balance != null && data.data.id){
           this.balance = data.data.balance;
           this.wallet_id = data.data.id;
           localStorage.setItem('wallet_id',this.wallet_id);
